@@ -1,5 +1,6 @@
 package br.com.dio.desafio.dominio;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,7 +28,18 @@ public class Dev {
 	}
 
 	public double calcularTotalXp() {
-		return this.conteudosConcluidos.stream().mapToDouble(Conteudo::calcularXp).sum();
+		Iterator<Conteudo> iterator = this.conteudosConcluidos.iterator();
+		double soma = 0;
+		while (iterator.hasNext()) {
+			double next = iterator.next().calcularXp();
+			soma += next;
+		}
+		return soma;
+
+		/*
+		 * return this.conteudosConcluidos .stream() .mapToDouble(Conteudo::calcularXp)
+		 * .sum();
+		 */
 	}
 
 	public String getNome() {
@@ -55,21 +67,19 @@ public class Dev {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(conteudosConcluidos, conteudosInscritos, nome);
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Dev dev = (Dev) o;
+		return Objects.equals(nome, dev.nome) && Objects.equals(conteudosInscritos, dev.conteudosInscritos)
+				&& Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Dev other = (Dev) obj;
-		return Objects.equals(conteudosConcluidos, other.conteudosConcluidos)
-				&& Objects.equals(conteudosInscritos, other.conteudosInscritos) && Objects.equals(nome, other.nome);
+	public int hashCode() {
+		return Objects.hash(nome, conteudosInscritos, conteudosConcluidos);
 	}
 
 }
